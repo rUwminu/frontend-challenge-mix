@@ -13,9 +13,10 @@ const SearchProduct = () => {
 
   const [isLowHigh, setIsLowHigh] = useState(false)
   const [priceFilter, setPriceFilter] = useState({
-    fromPrice: 0,
-    toPrice: null,
+    min: 0,
+    max: 0,
   })
+  const [oriSuggestions, setOriSuggestions] = useState([])
   const [filteredSuggestions, setFilteredSuggestions] = useState([])
 
   const productList = useSelector((state) => state.productList)
@@ -37,9 +38,42 @@ const SearchProduct = () => {
       })
   }
 
-  const deepFilterLowHigh = () => {}
+  const deepFilterLowHigh = () => {
+    const compare = (a, b) => {
+      const aPrice = Number(a.price.replace(/[^0-9.-]+/g, ''))
+      const bPrice = Number(b.price.replace(/[^0-9.-]+/g, ''))
 
-  const deepFilterPriceBetween = () => {}
+      return isLowHigh ? bPrice - aPrice : aPrice - bPrice
+    }
+
+    const tempArr = oriSuggestions.sort(compare)
+
+    const moreFilter = deepFilterPriceBetween(tempArr)
+
+    setFilteredSuggestions([...moreFilter])
+  }
+
+  const deepFilterPriceBetween = (items) => {
+    console.log(priceFilter)
+
+    const tempArr = items.map((item) => {
+      if (priceFilter.min > 0 && priceFilter.max > 0) {
+        return (
+          Number(item.price) > priceFilter.min &&
+          Number(item.price) < priceFilter.max &&
+          item
+        )
+      } else if (priceFilter.min > 0 && priceFilter.max === 0) {
+        return Number(item.price) > priceFilter.min && item
+      } else if (priceFilter.max > 0 && priceFilter.min === 0) {
+        return Number(item.price) < priceFilter.max && item
+      } else {
+        return item
+      }
+    })
+
+    return tempArr.filter((x) => x !== false)
+  }
 
   const handleFilterProductByName = () => {
     const filterSearchList = allProduct.filter(
@@ -47,7 +81,12 @@ const SearchProduct = () => {
         suggestion.title.toLowerCase().indexOf(type.toLowerCase()) > -1
     )
 
+    setOriSuggestions(filterSearchList)
     setFilteredSuggestions(filterSearchList)
+  }
+
+  const handleFilterBetweenPrice = () => {
+    deepFilterLowHigh()
   }
 
   useEffect(() => {
@@ -58,17 +97,21 @@ const SearchProduct = () => {
     }
   }, [type, allProduct])
 
+  useEffect(() => {
+    deepFilterLowHigh()
+  }, [isLowHigh])
+
   return (
     <SearchContainer>
-      <div className="inner-container">
+      <div className='inner-container'>
         <FilterBar>
           <h2>More Filter</h2>
-          <div className="filter-box">
+          <div className='filter-box'>
             <div
               className={`filter-item  ${isLowHigh && 'active'}`}
               onClick={() => setIsLowHigh(true)}
             >
-              <div className="checkbox" />
+              <div className='checkbox' />
               <span>Low to High</span>
             </div>
 
@@ -76,14 +119,50 @@ const SearchProduct = () => {
               className={`filter-item  ${!isLowHigh && 'active'}`}
               onClick={() => setIsLowHigh(false)}
             >
-              <div className="checkbox" />
+              <div className='checkbox' />
               <span>High to Low</span>
             </div>
+          </div>
+          <h2>Price</h2>
+          <div className='filter-min-max-box'>
+            <div className='price-input-box'>
+              <input
+                type='number'
+                className='input-box'
+                onChange={(e) => {
+                  if (e.target.value > 0) {
+                    setPriceFilter({ ...priceFilter, min: e.target.value })
+                  } else {
+                    setPriceFilter({ ...priceFilter, min: 0 })
+                  }
+                }}
+                placeholder='min'
+              />
+              <div className='dash' />
+              <input
+                type='number'
+                className='input-box'
+                onChange={(e) => {
+                  if (e.target.value > 0) {
+                    setPriceFilter({ ...priceFilter, max: e.target.value })
+                  } else {
+                    setPriceFilter({ ...priceFilter, max: 0 })
+                  }
+                }}
+                placeholder='max'
+              />
+            </div>
+          </div>
+          <div
+            className='btn filter-price-btn'
+            onClick={() => handleFilterBetweenPrice()}
+          >
+            Search Price
           </div>
         </FilterBar>
         <ProductContainer>
           <h1>Search By {type}</h1>
-          <div className="grid-container">
+          <div className='grid-container'>
             {filteredSuggestions &&
               filteredSuggestions.map((item, index) => {
                 let discount = 20
@@ -94,20 +173,20 @@ const SearchProduct = () => {
                     key={index}
                     index={index}
                   >
-                    <div className="product-img-box">
+                    <div className='product-img-box'>
                       <img
                         src={image[0]}
                         onError={(e) => (e.target.src = image[1])}
-                        alt="product-img"
+                        alt='product-img'
                       />
-                      {discount > 0 && <div className="tag">{discount}%</div>}
+                      {discount > 0 && <div className='tag'>{discount}%</div>}
                     </div>
-                    <div className="product-info">
+                    <div className='product-info'>
                       <h2>{title}</h2>
-                      <div className="product-price-box">
+                      <div className='product-price-box'>
                         <p>$ {((price / 100) * (100 - discount)).toFixed(2)}</p>
                         {discount > 0 && (
-                          <small className="price-ori">$ {price}</small>
+                          <small className='price-ori'>$ {price}</small>
                         )}
                       </div>
                     </div>
@@ -152,15 +231,18 @@ const FilterBar = styled.div`
     top-24
     flex
     flex-col
-    py-2
+    mr-2
+    px-2
+    pt-3
+    pb-6
     w-full
     md:max-w-[12rem]
     lg:max-w-[14rem]
     bg-white
-    border
-    border-red-400
+    rounded-md
     z-20
   `}
+  box-shadow: 0 0 5px rgba(0,0,0,0.2);
 
   h2 {
     ${tw`
@@ -219,6 +301,66 @@ const FilterBar = styled.div`
           `}
         }
       }
+    }
+  }
+
+  .filter-min-max-box {
+    ${tw`
+      flex
+      flex-col
+      w-full
+    `}
+
+    .price-input-box {
+      ${tw`
+        flex
+        items-center
+        justify-between
+      `}
+
+      .input-box {
+        ${tw`
+          p-1
+          w-full
+          border
+          border-gray-600
+          rounded-md
+        `}
+      }
+
+      .dash {
+        ${tw`
+          mx-2
+          w-5
+          h-[2px]
+          bg-gray-700
+        `}
+      }
+    }
+  }
+
+  .filter-price-btn {
+    ${tw`
+      mt-2
+      py-1
+      w-full
+      text-center
+      font-semibold
+      bg-yellow-500
+      text-gray-200
+      rounded-md
+      cursor-pointer
+
+      transition
+      duration-200
+      ease-in-out
+    `}
+
+    &:hover {
+      ${tw`
+        shadow-lg
+        bg-yellow-500/90
+      `}
     }
   }
 `

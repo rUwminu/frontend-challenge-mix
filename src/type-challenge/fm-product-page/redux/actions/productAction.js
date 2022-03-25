@@ -22,8 +22,6 @@ export const getProductList = (list) => async (dispatch) => {
       }
     })
 
-    console.log(tempArr)
-
     dispatch({
       type: PRODUCT_LIST_SUCCESS,
       payload: tempArr,

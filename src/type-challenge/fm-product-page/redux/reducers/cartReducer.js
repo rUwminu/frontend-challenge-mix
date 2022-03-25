@@ -5,10 +5,7 @@ import {
   REMOVE_ITEM_FROM_CART,
 } from '../constants/cartConstant'
 
-export const cartListReducer = (
-  state = { myCart: [], myOrder: [], newOrder: {} },
-  action
-) => {
+export const cartListReducer = (state = {}, action) => {
   switch (action.type) {
     case ADD_ITEM_TO_CART_REQUEST:
       return { ...state, loading: true }

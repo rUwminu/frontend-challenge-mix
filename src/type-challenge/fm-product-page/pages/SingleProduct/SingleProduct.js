@@ -1,100 +1,110 @@
-import React, { useState, useEffect } from "react";
-import tw from "twin.macro";
-import styled from "styled-components";
-import { useParams } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { addItemToCart } from "../../redux/actions/cartAction";
-
-// Dumb data
-import { productData } from "../../assets/dumb-data/productData";
+import React, { useState, useEffect } from 'react'
+import tw from 'twin.macro'
+import styled from 'styled-components'
+import axios from 'axios'
+import { useParams } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { addItemToCart } from '../../redux/actions/cartAction'
+import { getProductList } from '../../redux/actions/productAction'
 
 // Components
-import { ProductView } from "../../components/index";
+import { ProductView, ProductZoomModel } from '../../components/index'
 
 // Svg icon
-import { MinusSvg, PlusSvg, CartSvg } from "../../assets/index";
+import { MinusSvg, PlusSvg, CartSvg } from '../../assets/index'
 
 const SingleProduct = () => {
-  const { id } = useParams();
-  const dispatch = useDispatch();
+  const { id } = useParams()
+  const dispatch = useDispatch()
 
-  const [productList, setProductList] = useState([]);
-  const [singleProduct, setSingleProduct] = useState();
-  const [productInfo, setProductInfo] = useState();
+  const [isViewImg, setIsViewImg] = useState(false)
+  const [currentIndex, setCurrentIndex] = useState(1)
 
-  const getRandomSingleProduct = () => {
-    const random = Math.floor(Math.random() * productList.length);
+  const [singleProduct, setSingleProduct] = useState()
+  const [productQty, setProductQty] = useState(0)
 
-    setSingleProduct(productList[random]);
-    setProductInfo({ ...productList[random], qty: 0 });
-  };
+  const productList = useSelector((state) => state.productList)
+  const { allProduct } = productList
 
-  const getSelectedSingleProduct = () => {
-    const searchedItem = productList.find((item) => item.id === id);
+  // This api call should be request for selected product data. *currently is not porvided
+  const getAllProductList = async () => {
+    let uri = 'https://staging.flowerchimp.com/asset/json/products.json'
+    axios({
+      method: 'GET',
+      url: uri,
+      responseType: 'stream',
+    })
+      .then((res) => {
+        dispatch(getProductList(res.data.products))
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
 
-    setSingleProduct(searchedItem);
-    setProductInfo({ ...searchedItem, qty: 0 });
-  };
+  const getSelectedProduct = () => {
+    const sldProduct = allProduct.filter((item) => item.id === parseInt(id))
+
+    setSingleProduct(sldProduct[0])
+  }
 
   const handleAddQty = () => {
-    setProductInfo({ ...productInfo, qty: (productInfo.qty += 1) });
-  };
+    setProductQty(productQty + 1)
+  }
 
   const handleMinusQty = () => {
-    if (productInfo.qty > 0)
-      setProductInfo({ ...productInfo, qty: (productInfo.qty -= 1) });
-  };
+    if (productQty > 0) setProductQty(productQty - 1)
+  }
 
   const handleAddItemToCart = async () => {
-    if (productInfo && productInfo.qty > 0) {
-      await dispatch(addItemToCart(productInfo));
+    if (productQty > 0) {
+      await dispatch(addItemToCart({ ...singleProduct, qty: productQty }))
     }
-  };
+  }
 
   useEffect(() => {
-    if (productList.length === 0 && productData) {
-      setProductList([...productData]);
+    if (id && allProduct.length > 0) {
+      getSelectedProduct()
     }
+  }, [id, allProduct])
 
-    if (id === undefined && productList) {
-      console.log("new load");
-      getRandomSingleProduct();
+  useEffect(() => {
+    if (allProduct.length === 0) {
+      getAllProductList()
     }
+  }, [allProduct])
 
-    if (id && productList) {
-      console.log("select load");
-      getSelectedSingleProduct();
+  useEffect(() => {
+    if (isViewImg) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'auto'
     }
-  }, [productData, productList, id]);
-
-  //console.log(id);
-  //console.log(singleProduct);
+  }, [isViewImg])
 
   return (
     <ProductContainer>
       {singleProduct && (
         <>
-          <div className="product-banner-container">
+          <div
+            className="product-banner-container"
+            onClick={() => setIsViewImg(true)}
+          >
             <ProductView
-              productImg={singleProduct.productImg}
-              productThumbnail={singleProduct.productThumbnail}
+              productImg={singleProduct.image}
+              currentIndex={currentIndex}
+              setCurrentIndex={setCurrentIndex}
             />
           </div>
           <ProductInfoContainer className="product-info-container">
-            <h3>{singleProduct.brand} COMPANY</h3>
-            <h1>{singleProduct.productName}</h1>
-            <p>{singleProduct.productBio}</p>
+            <h1>{singleProduct.title}</h1>
             <div className="price-box">
               <div className="price-main">
                 <h2>
-                  $
-                  {(
-                    (singleProduct.price / 100) *
-                    (100 - singleProduct.discount)
-                  ).toFixed(2)}
+                  ${((singleProduct.price / 100) * (100 - 20)).toFixed(2)}
                 </h2>
                 {singleProduct.discount > 0 && (
-                  <div className="discount-tag">{singleProduct.discount}%</div>
+                  <div className="discount-tag">{20}%</div>
                 )}
               </div>
               {singleProduct.discount > 0 && (
@@ -105,11 +115,11 @@ const SingleProduct = () => {
               <div className="am-box">
                 <div
                   onClick={() => handleMinusQty()}
-                  className={`btn ${productInfo.qty !== 0 && "active"}`}
+                  className={`btn ${productQty !== 0 && 'active'}`}
                 >
                   <img src={MinusSvg} alt="am-svg" />
                 </div>
-                <span>{productInfo.qty}</span>
+                <span>{productQty}</span>
                 <div onClick={() => handleAddQty()} className={`btn active`}>
                   <img src={PlusSvg} alt="am-svg" />
                 </div>
@@ -122,14 +132,23 @@ const SingleProduct = () => {
           </ProductInfoContainer>
         </>
       )}
+      {isViewImg && singleProduct && (
+        <ProductZoomModel
+          productImg={singleProduct.image}
+          currentIndex={currentIndex}
+          setIsViewImg={setIsViewImg}
+          setCurrentIndex={setCurrentIndex}
+        />
+      )}
     </ProductContainer>
-  );
-};
+  )
+}
 
 const ProductContainer = styled.div`
   ${tw`
     m-auto
-    py-10
+    pt-28
+    pb-10
     w-full
     max-w-6xl
     flex
@@ -137,7 +156,6 @@ const ProductContainer = styled.div`
     sm:flex-row
     items-center
     sm:items-start
-    overflow-x-hidden
   `}
 
   .product-banner-container {
@@ -147,7 +165,7 @@ const ProductContainer = styled.div`
       w-full
       h-full
       max-w-sm
-      overflow-x-hidden
+      cursor-pointer
     `}
   }
 
@@ -160,7 +178,7 @@ const ProductContainer = styled.div`
       h-full
     `}
   }
-`;
+`
 
 const ProductInfoContainer = styled.div`
   ${tw`
@@ -330,6 +348,6 @@ const ProductInfoContainer = styled.div`
       }
     }
   }
-`;
+`
 
-export default SingleProduct;
+export default SingleProduct

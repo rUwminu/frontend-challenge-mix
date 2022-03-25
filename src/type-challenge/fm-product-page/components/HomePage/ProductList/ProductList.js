@@ -4,61 +4,59 @@ import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 
 // Redux
-import { useSelector, useDispatch } from 'react-redux'
-import { getProductList } from '../../../redux/actions/productAction'
-
-// Dumb data
-import { productData } from '../../../assets/dumb-data/productData'
+import { useSelector } from 'react-redux'
 
 const ProductList = () => {
-  const dispatch = useDispatch()
-
-  const [proItemValue, setProItemValue] = useState(8)
+  const [proItemValue, setProItemValue] = useState(0)
   const [proItemList, setProItemList] = useState([])
 
   const productList = useSelector((state) => state.productList)
   const { allProduct } = productList
 
-  const handleGetProduct = () => {
-    const newArr = productData.slice(proItemValue, proItemValue + 8)
-
-    dispatch(getProductList(newArr))
+  const handleGetProduct = async () => {
+    const newArr = await allProduct.slice(
+      proItemValue,
+      proItemValue + 8 > allProduct.length
+        ? allProduct.length
+        : proItemValue + 8
+    )
 
     setProItemValue(proItemValue + 8)
+    setProItemList(proItemList.concat(newArr))
   }
 
   useEffect(() => {
-    if (allProduct.length === 0 && productData) {
-      const newArr = productData.slice(0, 8)
-
-      dispatch(getProductList(newArr))
-    }
-  }, [productData, allProduct])
-
-  useEffect(() => {
-    if (allProduct) setProItemList([...allProduct])
+    if (allProduct.length > 0) handleGetProduct()
   }, [allProduct])
 
   return (
     <ProductContainer>
       <h1>Our Products</h1>
-      <div className='product-box'>
+      <div className="product-box">
         {proItemList &&
           proItemList.map((item, index) => {
-            const { id, productName, brand, price, discount, productImg } = item
+            let discount = 20
+            const { id, title, price, image } = item
             return (
-              <ProductCard to={`product/${id}`} key={id || index} index={index}>
-                <div className='product-img-box'>
-                  <img src={productImg[0].image} alt='product-img' />
-                  {discount > 0 && <div className='tag'>{discount}%</div>}
+              <ProductCard
+                to={`/sneaker/product/${id}`}
+                key={id || index}
+                index={index}
+              >
+                <div className="product-img-box">
+                  <img
+                    src={image[0]}
+                    onError={(e) => (e.target.src = image[1])}
+                    alt="product-img"
+                  />
+                  {discount > 0 && <div className="tag">{discount}%</div>}
                 </div>
-                <div className='product-info'>
-                  <h2>{productName}</h2>
-                  <small className='product-brand'>{brand}</small>
-                  <div className='product-price-box'>
-                    <p>$ {(price / 100) * (100 - discount)}</p>
+                <div className="product-info">
+                  <h2>{title}</h2>
+                  <div className="product-price-box">
+                    <p>$ {((price / 100) * (100 - discount)).toFixed(2)}</p>
                     {discount > 0 && (
-                      <small className='price-ori'>$ {price}</small>
+                      <small className="price-ori">$ {price}</small>
                     )}
                   </div>
                 </div>
@@ -66,7 +64,7 @@ const ProductList = () => {
             )
           })}
       </div>
-      <div className='more-btn' onClick={() => handleGetProduct()}>
+      <div className="more-btn" onClick={() => handleGetProduct()}>
         Show more
       </div>
     </ProductContainer>
@@ -124,6 +122,7 @@ const ProductContainer = styled.div`
       font-semibold
       border
       border-yellow-500
+      cursor-pointer
 
       transition
       duration-200

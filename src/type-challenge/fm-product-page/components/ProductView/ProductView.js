@@ -1,97 +1,98 @@
-import React, { useState, useEffect } from "react";
-import tw from "twin.macro";
-import styled from "styled-components";
+import React, { useState, useEffect } from 'react'
+import tw from 'twin.macro'
+import styled from 'styled-components'
 
 // Svg Icon
-import { NextSvg, PreSvg } from "../../assets/index";
+import { NextSvg, PreSvg } from '../../assets/index'
 
-const ProductView = ({ productImg, productThumbnail }) => {
-  const [listImg, setListImg] = useState([]);
-  const [listThumb, setListthumb] = useState([]);
-  const [currentIndex, setCurrentIndex] = useState(1);
+const ProductView = ({ productImg, currentIndex, setCurrentIndex }) => {
+  const [listImg, setListImg] = useState([])
 
   const handleChangeImg = (index) => {
-    setCurrentIndex(index);
-  };
+    setCurrentIndex(index)
+  }
 
   useEffect(() => {
-    setListImg([...productImg]);
-    setListthumb([...productThumbnail]);
-  }, [productImg]);
+    setListImg([...productImg])
+  }, [productImg])
 
   useEffect(() => {
-    const lastIndex = listImg.length - 1;
+    const lastIndex = listImg.length - 1
 
     if (currentIndex < 0) {
-      setCurrentIndex(lastIndex);
+      setCurrentIndex(lastIndex)
     }
 
     if (currentIndex > lastIndex) {
-      setCurrentIndex(0);
+      setCurrentIndex(0)
     }
-  }, [currentIndex, listImg]);
+  }, [currentIndex, listImg])
 
   //console.log(productImg);
 
   return (
     <ViewContainer>
       <div className="inner-container">
-        {listImg &&
-          listImg.map((img, index) => {
-            const { id, image } = img;
+        <div className="img-slider-box">
+          {listImg &&
+            listImg.map((img, index) => {
+              let position = 'nextSlideV'
 
-            let position = "nextSlideV";
+              if (currentIndex === index) {
+                position = 'activeSlideV'
+              }
 
-            if (currentIndex === index) {
-              position = "activeSlideV";
-            }
+              if (
+                currentIndex === index - 1 ||
+                (index === 0 && currentIndex === listImg.length - 1)
+              ) {
+                position = 'lastSlideV'
+              }
 
-            if (
-              currentIndex === index - 1 ||
-              (index === 0 && currentIndex === listImg.length - 1)
-            ) {
-              position = "lastSlideV";
-            }
-
-            return (
-              <SliderCard key={id || index} className={position}>
-                <img src={image} alt="banner-img" />
-              </SliderCard>
-            );
-          })}
+              return (
+                <SliderCard key={index} className={position}>
+                  <img src={img} alt="banner-img" />
+                </SliderCard>
+              )
+            })}
+        </div>
         <div
           className="slider-btn pre-btn"
-          onClick={() => setCurrentIndex(currentIndex - 1)}
+          onClick={(e) => {
+            e.stopPropagation()
+            setCurrentIndex(currentIndex - 1)
+          }}
         >
           <img src={PreSvg} alt="pre-svg" />
         </div>
         <div
           className="slider-btn next-btn"
-          onClick={() => setCurrentIndex(currentIndex + 1)}
+          onClick={(e) => {
+            e.stopPropagation()
+            setCurrentIndex(currentIndex + 1)
+          }}
         >
           <img src={NextSvg} alt="next-svg" />
         </div>
       </div>
-      {listThumb && (
-        <ThumbnailContainer>
-          {listThumb.map((thumb, index) => {
-            const { id, thumbnail } = thumb;
-
+      {listImg && (
+        <ThumbnailContainer onClick={(e) => e.stopPropagation()}>
+          {listImg.map((thumb, index) => {
             return (
               <div
                 onClick={() => handleChangeImg(index)}
-                key={id || index}
-                className={`thumb-card ${currentIndex === index && "active"}`}
+                key={index}
+                className={`thumb-card ${currentIndex === index && 'active'}`}
               >
-                <img src={thumbnail} alt="thumbnails-img" />
+                <img src={thumb} alt="thumbnails-img" />
               </div>
-            );
+            )
           })}
         </ThumbnailContainer>
       )}
     </ViewContainer>
-  );
-};
+  )
+}
 
 const ViewContainer = styled.div`
   ${tw`
@@ -106,6 +107,18 @@ const ViewContainer = styled.div`
     `}
     padding-top: 100%;
 
+    .img-slider-box {
+      ${tw`
+        absolute
+        top-0
+        left-0
+        w-full
+        h-full
+        rounded-xl
+        overflow-hidden
+      `}
+    }
+
     .slider-btn {
       ${tw`
         absolute
@@ -118,6 +131,8 @@ const ViewContainer = styled.div`
         items-center
         justify-center
         bg-white
+        border
+        border-gray-400
         rounded-full
         shadow-md
         cursor-pointer
@@ -127,6 +142,7 @@ const ViewContainer = styled.div`
         ${tw`
           w-full
           h-full
+          pointer-events-none
 
           transition-all
           duration-200
@@ -171,7 +187,7 @@ const ViewContainer = styled.div`
     opacity: 0;
     transform: translateX(100%);
   }
-`;
+`
 
 const SliderCard = styled.div`
   ${tw`
@@ -196,9 +212,19 @@ const SliderCard = styled.div`
       h-full
       w-full
       object-cover
+
+      transition
+      duration-200
+      ease-in-out
     `}
   }
-`;
+
+  &:hover {
+    img {
+      transform: scale(1.1);
+    }
+  }
+`
 
 const ThumbnailContainer = styled.div`
   ${tw`
@@ -224,7 +250,7 @@ const ThumbnailContainer = styled.div`
     `}
 
     &:before {
-      content: "";
+      content: '';
       ${tw`
         absolute
         top-0
@@ -269,6 +295,6 @@ const ThumbnailContainer = styled.div`
       `}
     }
   }
-`;
+`
 
-export default ProductView;
+export default ProductView

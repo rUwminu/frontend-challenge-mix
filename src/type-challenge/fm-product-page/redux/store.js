@@ -5,7 +5,14 @@ import thunk from 'redux-thunk'
 import { cartListReducer } from './reducers/cartReducer'
 import { productListReducer } from './reducers/productReducer'
 
-const initialState = {}
+const initialState = {
+  cartList: {
+    myCart: [],
+  },
+  productList: {
+    allProduct: [],
+  },
+}
 
 const reducer = combineReducers({
   cartList: cartListReducer,

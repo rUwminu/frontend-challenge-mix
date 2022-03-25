@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import tw from "twin.macro";
-import styled from "styled-components";
+import React, { useState, useEffect } from 'react'
+import tw from 'twin.macro'
+import styled from 'styled-components'
 
 // Svg icon
 import {
@@ -9,51 +9,51 @@ import {
   Banner3,
   PreSvg,
   NextSvg,
-} from "../../../assets/index";
+} from '../../../assets/index'
 
 const BannerImgArr = [
   {
-    id: "b1",
+    id: 'b1',
     bannerImg: Banner1,
   },
   {
-    id: "b2",
+    id: 'b2',
     bannerImg: Banner2,
   },
   {
-    id: "b3",
+    id: 'b3',
     bannerImg: Banner3,
   },
   {
-    id: "b4",
+    id: 'b4',
     bannerImg: Banner2,
   },
-];
+]
 
 const HeroBanner = () => {
-  const [currentIndex, setCurrentIndex] = useState(1);
+  const [currentIndex, setCurrentIndex] = useState(1)
 
   useEffect(() => {
-    const lastIndex = BannerImgArr.length - 1;
+    const lastIndex = BannerImgArr.length - 1
 
     if (currentIndex < 0) {
-      setCurrentIndex(lastIndex);
+      setCurrentIndex(lastIndex)
     }
 
     if (currentIndex > lastIndex) {
-      setCurrentIndex(0);
+      setCurrentIndex(0)
     }
-  }, [currentIndex, BannerImgArr]);
+  }, [currentIndex])
 
   //Auto slide to next slide in 3s
   useEffect(() => {
     let slider = setInterval(() => {
-      setCurrentIndex(currentIndex + 1);
-    }, 8000);
+      setCurrentIndex(currentIndex + 1)
+    }, 8000)
 
     //run one time after one
-    return () => clearInterval(slider);
-  }, [currentIndex]);
+    return () => clearInterval(slider)
+  }, [currentIndex])
 
   return (
     <HeroContianer>
@@ -61,30 +61,30 @@ const HeroBanner = () => {
         <BannerSliderContainer>
           {BannerImgArr &&
             BannerImgArr.map((item, index) => {
-              const { id, bannerImg } = item;
+              const { id, bannerImg } = item
 
-              let position = "hideSlideV";
+              let position = 'hideSlideV'
 
               if (currentIndex === index) {
-                position = "activeSlideV";
+                position = 'activeSlideV'
               }
 
               if (
                 currentIndex === index - 1 ||
                 (index === 0 && currentIndex === BannerImgArr.length - 1)
               ) {
-                position = "lastSlideV";
+                position = 'lastSlideV'
               }
 
               if (currentIndex === index + 1) {
-                position = "nextSlideV";
+                position = 'nextSlideV'
               }
 
               return (
                 <SliderCard key={id || index} className={position}>
                   <img src={bannerImg} alt="banner-img" />
                 </SliderCard>
-              );
+              )
             })}
         </BannerSliderContainer>
         <InfoCard>
@@ -104,7 +104,7 @@ const HeroBanner = () => {
                     <div
                       key={item.id || index}
                       className={`dot-item ${
-                        currentIndex === index && "active"
+                        currentIndex === index && 'active'
                       }`}
                     >
                       <div className={`dot-bg`} />
@@ -130,8 +130,8 @@ const HeroBanner = () => {
         </InfoCard>
       </div>
     </HeroContianer>
-  );
-};
+  )
+}
 
 const HeroContianer = styled.div`
   ${tw`
@@ -156,7 +156,7 @@ const HeroContianer = styled.div`
       md:justify-end
     `}
   }
-`;
+`
 
 const BannerSliderContainer = styled.div`
   ${tw`
@@ -186,7 +186,7 @@ const BannerSliderContainer = styled.div`
     opacity: 0;
     transform: translateX(-102.5%);
   }
-`;
+`
 
 const SliderCard = styled.div`
   ${tw`
@@ -211,7 +211,7 @@ const SliderCard = styled.div`
       object-cover
     `}
   }
-`;
+`
 
 const InfoCard = styled.div`
   ${tw`
@@ -405,6 +405,6 @@ const InfoCard = styled.div`
       }
     }
   }
-`;
+`
 
-export default HeroBanner;
+export default HeroBanner

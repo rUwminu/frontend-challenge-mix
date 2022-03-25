@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useRef } from "react";
-import tw from "twin.macro";
-import styled from "styled-components";
-import { Link } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { removeItemFromCart } from "../../redux/actions/cartAction";
+import React, { useState, useEffect } from 'react'
+import tw from 'twin.macro'
+import styled from 'styled-components'
+import { Link, useNavigate } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
+import { removeItemFromCart } from '../../redux/actions/cartAction'
 
 // Search Data
-import { productSearchData } from "../../assets/dumb-data/productSearchname";
+import { productSearchData } from '../../assets/dumb-data/productSearchname'
 
 import {
   LogoSvg,
@@ -15,94 +15,102 @@ import {
   MenuSvg,
   CloseSvg,
   DeleteSvg,
-} from "../../assets/index.js";
+} from '../../assets/index.js'
 
 const Navbar = () => {
-  let lastScroll = 0;
-  const dispatch = useDispatch();
+  let lastScroll = 0
+  const dispatch = useDispatch()
+  let navigate = useNavigate()
 
-  const [isActive, setIsActive] = useState(false);
-  const [isScrollTop, setIsScrollTop] = useState(true);
-  const [isMobile, setIsMobile] = useState();
-  const [isDropOption, setIsDropOption] = useState(false);
-  const [isSearch, setIsSearch] = useState(false);
-  const [input, setInput] = useState("");
-  const [showSuggestions, setShowSuggestions] = useState(false);
-  const [filteredSuggestions, setFilteredSuggestions] = useState([]);
-  const [isHoverCart, setIsHoverCart] = useState(false);
+  const [isActive, setIsActive] = useState(false)
+  const [isScrollTop, setIsScrollTop] = useState(true)
+  const [isMobile, setIsMobile] = useState()
+  const [isSearch, setIsSearch] = useState(false)
+  const [input, setInput] = useState('')
+  const [showSuggestions, setShowSuggestions] = useState(false)
+  const [filteredSuggestions, setFilteredSuggestions] = useState([])
+  const [isHoverCart, setIsHoverCart] = useState(false)
 
-  const cartList = useSelector((state) => state.cartList);
-  const { myCart } = cartList;
+  const productList = useSelector((state) => state.productList)
+  const { allProduct } = productList
+
+  const cartList = useSelector((state) => state.cartList)
+  const { myCart } = cartList
 
   //console.log(myCart);
 
   const handleResize = () => {
     if (window.innerWidth < 1024) {
-      setIsMobile(true);
+      setIsMobile(true)
     } else {
-      setIsMobile(false);
-      setIsActive(false);
+      setIsMobile(false)
+      setIsActive(false)
     }
-  };
+  }
 
   const handleScroll = () => {
-    const currentTop = window.scrollY;
+    const currentTop = window.scrollY
 
     if (currentTop <= 0) {
-      setIsScrollTop(true);
+      setIsScrollTop(true)
     }
     if (currentTop > lastScroll) {
-      setIsScrollTop(false);
+      setIsScrollTop(false)
     }
 
-    lastScroll = currentTop;
-  };
+    lastScroll = currentTop
+  }
+
+  const handleKeyDownSearch = (e) => {
+    if (e.key === 'Enter') {
+      navigate(`/sneaker/search/type?name=${input}`)
+    }
+  }
 
   const handleSearchItem = (e) => {
-    const userInput = e.target.value;
+    const userInput = e.target.value
 
-    if (userInput === "") {
-      setShowSuggestions(false);
-      setInput(e.target.value);
-      return;
+    if (userInput === '') {
+      setShowSuggestions(false)
+      setInput(e.target.value)
+      return
     }
 
-    const filterSearchList = productSearchData.filter(
+    const filterSearchList = allProduct.filter(
       (suggestion) =>
-        suggestion.productName.toLowerCase().indexOf(userInput.toLowerCase()) >
-        -1
-    );
+        suggestion.title.toLowerCase().indexOf(userInput.toLowerCase()) > -1
+    )
 
-    setInput(e.target.value);
-    setFilteredSuggestions(filterSearchList);
-    setShowSuggestions(true);
-  };
+    setInput(e.target.value)
+    setFilteredSuggestions(filterSearchList)
+    setShowSuggestions(true)
+  }
 
   const handleSelectItemFromList = (id, productName) => {
-    setFilteredSuggestions([]);
-    setInput(productName);
-    setShowSuggestions(false);
-  };
+    setFilteredSuggestions([])
+    setInput(productName)
+    setShowSuggestions(false)
+  }
 
   const handleRemoveItemFromCart = (id) => {
-    dispatch(removeItemFromCart(id));
-  };
+    dispatch(removeItemFromCart(id))
+  }
 
   useEffect(() => {
-    handleResize();
-    handleScroll();
-    window.addEventListener("resize", handleResize);
-    window.addEventListener("scroll", handleScroll);
-  }, []);
+    handleResize()
+    handleScroll()
+    window.addEventListener('resize', handleResize)
+    window.addEventListener('scroll', handleScroll)
+  }, [])
 
   return (
     <NavContainer
-      className={`${isScrollTop ? "py-4" : "py-[10px] bg-white shadow-md"}`}
+      className={`${isScrollTop ? 'py-4' : 'py-[10px] bg-white shadow-md'}`}
     >
       <div className={`inner-container`}>
         {isMobile && (
           <Burger
-            className={`${isActive && "line-active"}`}
+            className={`${isActive && 'line-active'}`}
             onClick={() => setIsActive(!isActive)}
           >
             <div className={`line-1`} />
@@ -111,7 +119,9 @@ const Navbar = () => {
           </Burger>
         )}
         <div className="nav-left-container">
-          <img className="logo-svg" src={LogoSvg} alt="logo-svg" />
+          <Link to={`/sneaker`}>
+            <img className="logo-svg" src={LogoSvg} alt="logo-svg" />
+          </Link>
           {!isSearch && (
             <div className="nav-links-box">
               <Link to="/sneaker" className="nav-item sm:inline-flex">
@@ -133,7 +143,7 @@ const Navbar = () => {
           )}
         </div>
         <div className="nav-right-container">
-          <div className={`search-box ${isSearch && "active"}`}>
+          <div className={`search-box ${isSearch && 'active'}`}>
             <img
               onClick={() => setIsSearch(!isSearch)}
               className="search-icon"
@@ -144,6 +154,7 @@ const Navbar = () => {
               type="text"
               value={input}
               onChange={handleSearchItem}
+              onKeyDown={handleKeyDownSearch}
               className="input-box"
             />
             {showSuggestions && (
@@ -153,19 +164,17 @@ const Navbar = () => {
                 {filteredSuggestions.length ? (
                   <div className="suggestions-box">
                     {filteredSuggestions.map((suggestion, index) => {
-                      const { id, productName } = suggestion;
+                      const { id, title } = suggestion
                       return (
                         <Link
                           to={`/product/${id}`}
                           className={`search-link`}
                           key={index}
-                          onClick={() =>
-                            handleSelectItemFromList(id, productName)
-                          }
+                          onClick={() => handleSelectItemFromList(id, title)}
                         >
-                          {productName}
+                          {title}
                         </Link>
-                      );
+                      )
                     })}
                   </div>
                 ) : (
@@ -185,26 +194,19 @@ const Navbar = () => {
                 {myCart && (
                   <div className="items-container">
                     {myCart.map((item, index) => {
-                      const {
-                        id,
-                        productName,
-                        productImg,
-                        price,
-                        discount,
-                        qty,
-                      } = item;
+                      const { id, title, image, price, qty } = item
 
-                      const subtotal = (price / 100) * (100 - discount) * qty;
+                      const subtotal = (price / 100) * (100 - 20) * qty
 
                       return (
                         <div className="item-card" key={id || index}>
                           <div className="banner-box">
-                            <img src={productImg[0].image} alt="banner-img" />
+                            <img src={image[0]} alt="banner-img" />
                           </div>
                           <div className="info-box">
-                            <h2>{productName}</h2>
+                            <h2>{title}</h2>
                             <h1>
-                              ${price.toFixed(2)} x {qty}{" "}
+                              ${parseInt(price).toFixed(2)} x {qty}{' '}
                               <span>${subtotal.toFixed(2)}</span>
                             </h1>
                           </div>
@@ -215,7 +217,7 @@ const Navbar = () => {
                             <img src={DeleteSvg} alt="del-svg" />
                           </div>
                         </div>
-                      );
+                      )
                     })}
                   </div>
                 )}
@@ -236,7 +238,7 @@ const Navbar = () => {
       {isMobile && (
         <AbsoluteNav
           className={`${
-            isActive ? "translate-x-0 shadow-md" : "-translate-x-full"
+            isActive ? 'translate-x-0 shadow-md' : '-translate-x-full'
           }`}
         >
           <div className="inner-absolute-container">
@@ -281,13 +283,12 @@ const Navbar = () => {
 
       {isActive && <div className="bg-cover" />}
     </NavContainer>
-  );
-};
+  )
+}
 
 const NavContainer = styled.div`
   ${tw`
-    relative
-    sticky
+    fixed
     top-0
     left-0
     w-full
@@ -303,8 +304,8 @@ const NavContainer = styled.div`
 
   .inner-container {
     ${tw`
-      px-4
-      lg:px-0
+      px-6
+      xl:px-0
       mx-auto
       w-full
       md:max-w-6xl
@@ -353,7 +354,7 @@ const NavContainer = styled.div`
         `}
 
         :after {
-          content: "";
+          content: '';
 
           ${tw`
             absolute
@@ -462,6 +463,7 @@ const NavContainer = styled.div`
           inline-flex
           pointer-events-auto
         `}
+        box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
       }
     }
 
@@ -559,7 +561,7 @@ const NavContainer = styled.div`
         translate-y-[6px]
         md:translate-x-[-0px]
         md:translate-y-[8px]
-      `}//transform: rotate(-45deg) translate(-6px, 6px);;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+      `}//transform: rotate(-45deg) translate(-6px, 6px);;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     }
 
     .line-2 {
@@ -590,7 +592,7 @@ const NavContainer = styled.div`
       `}
     }
   }
-`;
+`
 
 const Burger = styled.div`
   ${tw`
@@ -626,7 +628,7 @@ const Burger = styled.div`
       ease-in-out
     `}
   }
-`;
+`
 
 const AbsoluteNav = styled.div`
   ${tw`
@@ -669,7 +671,7 @@ const AbsoluteNav = styled.div`
     `}
 
     :after {
-      content: "";
+      content: '';
 
       ${tw`
         absolute
@@ -697,7 +699,7 @@ const AbsoluteNav = styled.div`
       }
     }
   }
-`;
+`
 
 const SearchListContainer = styled.div`
   ${tw`
@@ -750,7 +752,7 @@ const SearchListContainer = styled.div`
       font-semibold
     `}
   }
-`;
+`
 
 const CartListContainer = styled.div`
   ${tw`
@@ -916,6 +918,6 @@ const CartListContainer = styled.div`
       `}
     }
   }
-`;
+`
 
-export default Navbar;
+export default Navbar

@@ -1,6 +1,11 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import tw from 'twin.macro'
 import styled from 'styled-components'
+import axios from 'axios'
+import { useDispatch } from 'react-redux'
+
+// Redux Action
+import { getProductList } from '../../redux/actions/productAction'
 
 import {
   HeroBanner,
@@ -40,6 +45,27 @@ const featureTagContent = [
 ]
 
 const ShopHome = () => {
+  const dispatch = useDispatch()
+
+  const getAllProductList = async () => {
+    let uri = 'https://staging.flowerchimp.com/asset/json/products.json'
+    axios({
+      method: 'GET',
+      url: uri,
+      responseType: 'stream',
+    })
+      .then((res) => {
+        dispatch(getProductList(res.data.products))
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
+
+  useEffect(() => {
+    getAllProductList()
+  }, [])
+
   return (
     <PageContainer>
       <HeroBanner />
@@ -50,11 +76,11 @@ const ShopHome = () => {
               const { id, icon, title, body } = tag
 
               return (
-                <div key={id} className='tag-card'>
-                  <div className='tag-icon'>
-                    <img src={icon} alt='tag-svg' />
+                <div key={id} className="tag-card">
+                  <div className="tag-icon">
+                    <img src={icon} alt="tag-svg" />
                   </div>
-                  <div className='tag-info'>
+                  <div className="tag-info">
                     <h2>{title}</h2>
                     <p>{body}</p>
                   </div>
@@ -73,7 +99,8 @@ const ShopHome = () => {
 
 const PageContainer = styled.div`
   ${tw`
-    w-screen
+    pt-14
+    w-full
     overflow-x-hidden
   `}
 `

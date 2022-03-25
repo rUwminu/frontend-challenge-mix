@@ -2,31 +2,36 @@ import {
   PRODUCT_LIST_FAIL,
   PRODUCT_LIST_REQUEST,
   PRODUCT_LIST_SUCCESS,
-} from "../constants/productConstant";
+} from '../constants/productConstant'
 
-export const getProductList = (list) => (dispatch) => {
+// Extra dummy product image
+import product1 from '../../assets/product-imgs/image-product-1.jpg'
+import product2 from '../../assets/product-imgs/image-product-2.jpg'
+import product3 from '../../assets/product-imgs/image-product-3.jpg'
+
+export const getProductList = (list) => async (dispatch) => {
   dispatch({
     type: PRODUCT_LIST_REQUEST,
-  });
+  })
 
   try {
-    if (list) {
-      dispatch({
-        type: PRODUCT_LIST_SUCCESS,
-        payload: list,
-      });
-    }
+    let tempArr = [...list].map((item) => {
+      return {
+        ...item,
+        image: [item.image.src, product1, product2, product3],
+      }
+    })
 
-    if (list.error) {
-      dispatch({
-        type: PRODUCT_LIST_FAIL,
-        payload: list.error,
-      });
-    }
+    console.log(tempArr)
+
+    dispatch({
+      type: PRODUCT_LIST_SUCCESS,
+      payload: tempArr,
+    })
   } catch (err) {
     dispatch({
       type: PRODUCT_LIST_FAIL,
       payload: err,
-    });
+    })
   }
-};
+}

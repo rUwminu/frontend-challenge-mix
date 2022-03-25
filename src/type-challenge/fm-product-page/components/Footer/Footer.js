@@ -1,8 +1,8 @@
-import React from "react";
-import tw from "twin.macro";
-import styled from "styled-components";
+import React from 'react'
+import tw from 'twin.macro'
+import styled from 'styled-components'
 
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom'
 
 const Footer = () => {
   return (
@@ -67,8 +67,8 @@ const Footer = () => {
         </div>
       </div>
     </FooterContainer>
-  );
-};
+  )
+}
 
 const FooterContainer = styled.div`
   ${tw`
@@ -87,8 +87,8 @@ const FooterContainer = styled.div`
   .inner-container {
     ${tw`
         mx-auto
-        px-4
-        lg:px-0
+        px-6
+        xl:px-0
         w-full
         max-w-6xl
         flex
@@ -137,6 +137,6 @@ const FooterContainer = styled.div`
       }
     }
   }
-`;
+`
 
-export default Footer;
+export default Footer

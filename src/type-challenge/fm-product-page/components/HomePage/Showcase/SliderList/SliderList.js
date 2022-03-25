@@ -61,7 +61,7 @@ const SliderList = () => {
     if (currentIndex > lastIndex) {
       setCurrentIndex(0)
     }
-  }, [currentIndex, SliderItem])
+  }, [currentIndex])
 
   useEffect(() => {
     handleResize()
@@ -71,13 +71,14 @@ const SliderList = () => {
   return (
     <>
       <SliderContainer move={isMobile ? 14.7 : 18} index={currentIndex}>
-        <div className='slider-container'>
+        <div className="slider-container">
           {SliderItem &&
             SliderItem.map((item, index) => {
               const { id, image, title, tag } = item
 
               return (
                 <SliderCard
+                  key={id}
                   className={`${currentIndex === index ? 'h-full' : 'h-[80%]'}`}
                 >
                   <img
@@ -86,23 +87,23 @@ const SliderList = () => {
                     alt={title}
                   />
                   {currentIndex === index && (
-                    <div className='tag-box'>
+                    <div className="tag-box">
                       <h2>
                         0{index + 1} <span>---{tag}</span>
                       </h2>
                       <h1>{title}</h1>
                       <div
-                        className='next-btn'
+                        className="next-btn"
                         onClick={() => setCurrentIndex(currentIndex + 1)}
                       >
-                        <img src={NextSvg} alt='next-svg' />
+                        <img src={NextSvg} alt="next-svg" />
                       </div>
                     </div>
                   )}
                 </SliderCard>
               )
             })}
-          <div className='more-box'>
+          <div className="more-box">
             <h1>
               Need More
               <br />
@@ -111,7 +112,7 @@ const SliderList = () => {
             <p>Contact Us!</p>
           </div>
         </div>
-        <div className='slider-dot-box'>
+        <div className="slider-dot-box">
           {SliderItem &&
             SliderItem.map((item, index) => (
               <div

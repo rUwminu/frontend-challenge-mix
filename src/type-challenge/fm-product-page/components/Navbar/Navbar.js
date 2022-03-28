@@ -118,56 +118,56 @@ const Navbar = () => {
             <div className={`line-3`} />
           </Burger>
         )}
-        <div className="nav-left-container">
+        <div className='nav-left-container'>
           <Link to={`/sneaker`}>
-            <img className="logo-svg" src={LogoSvg} alt="logo-svg" />
+            <img className='logo-svg' src={LogoSvg} alt='logo-svg' />
           </Link>
           {!isSearch && (
-            <div className="nav-links-box">
-              <Link to="/sneaker" className="nav-item sm:inline-flex">
+            <div className='nav-links-box'>
+              <Link to='/sneaker' className='nav-item sm:inline-flex'>
                 Collections
               </Link>
-              <Link to="/sneaker" className="nav-item md:inline-flex">
+              <Link to='/sneaker' className='nav-item md:inline-flex'>
                 Wearable
               </Link>
-              <Link to="/sneaker" className="nav-item md:inline-flex">
+              <Link to='/sneaker' className='nav-item md:inline-flex'>
                 Daily Use
               </Link>
-              <Link to="/sneaker" className="nav-item lg:inline-flex">
+              <Link to='/sneaker' className='nav-item lg:inline-flex'>
                 About
               </Link>
-              <Link to="/sneaker" className="nav-item lg:inline-flex">
+              <Link to='/sneaker' className='nav-item lg:inline-flex'>
                 Contact
               </Link>
             </div>
           )}
         </div>
-        <div className="nav-right-container">
+        <div className='nav-right-container'>
           <div className={`search-box ${isSearch && 'active'}`}>
             <img
               onClick={() => setIsSearch(!isSearch)}
-              className="search-icon"
+              className='search-icon'
               src={isSearch ? CloseSvg : MenuSvg}
-              alt="cart-svg"
+              alt='cart-svg'
             />
             <input
-              type="text"
+              type='text'
               value={input}
               onChange={handleSearchItem}
               onKeyDown={handleKeyDownSearch}
-              className="input-box"
+              className='input-box'
             />
             {showSuggestions && (
               <SearchListContainer
                 onMouseLeave={() => setShowSuggestions(false)}
               >
                 {filteredSuggestions.length ? (
-                  <div className="suggestions-box">
+                  <div className='suggestions-box'>
                     {filteredSuggestions.map((suggestion, index) => {
                       const { id, title } = suggestion
                       return (
                         <Link
-                          to={`/product/${id}`}
+                          to={`/sneaker/product/${id}`}
                           className={`search-link`}
                           key={index}
                           onClick={() => handleSelectItemFromList(id, title)}
@@ -183,27 +183,27 @@ const Navbar = () => {
               </SearchListContainer>
             )}
           </div>
-          <div className="cart-box" onMouseOver={() => setIsHoverCart(true)}>
-            <div className="cart-icon-box">
-              <img className="cart-icon" src={CartSvg} alt="cart-svg" />
-              {myCart.length !== 0 && <div className="cart-notify-dot" />}
+          <div className='cart-box' onMouseOver={() => setIsHoverCart(true)}>
+            <div className='cart-icon-box'>
+              <img className='cart-icon' src={CartSvg} alt='cart-svg' />
+              {myCart.length !== 0 && <div className='cart-notify-dot' />}
             </div>
             {isHoverCart && (
               <CartListContainer onMouseLeave={() => setIsHoverCart(false)}>
-                <h1 className="cart-title">Cart</h1>
+                <h1 className='cart-title'>Cart</h1>
                 {myCart && (
-                  <div className="items-container">
+                  <div className='items-container'>
                     {myCart.map((item, index) => {
                       const { id, title, image, price, qty } = item
 
                       const subtotal = (price / 100) * (100 - 20) * qty
 
                       return (
-                        <div className="item-card" key={id || index}>
-                          <div className="banner-box">
-                            <img src={image[0]} alt="banner-img" />
+                        <div className='item-card' key={id || index}>
+                          <div className='banner-box'>
+                            <img src={image[0]} alt='banner-img' />
                           </div>
-                          <div className="info-box">
+                          <div className='info-box'>
                             <h2>{title}</h2>
                             <h1>
                               ${parseInt(price).toFixed(2)} x {qty}{' '}
@@ -211,10 +211,10 @@ const Navbar = () => {
                             </h1>
                           </div>
                           <div
-                            className="del-box"
+                            className='del-box'
                             onClick={() => handleRemoveItemFromCart(id)}
                           >
-                            <img src={DeleteSvg} alt="del-svg" />
+                            <img src={DeleteSvg} alt='del-svg' />
                           </div>
                         </div>
                       )
@@ -222,16 +222,16 @@ const Navbar = () => {
                   </div>
                 )}
                 {myCart.length === 0 && (
-                  <div className="empty-text">Seen Empty In Cart</div>
+                  <div className='empty-text'>Seen Empty In Cart</div>
                 )}
                 {myCart.length !== 0 && (
-                  <div className="checkout-btn">Checkout</div>
+                  <div className='checkout-btn'>Checkout</div>
                 )}
               </CartListContainer>
             )}
           </div>
-          <div className="avatar-box">
-            <img className="avatar-img" src={AvatarImg} alt="cart-svg" />
+          <div className='avatar-box'>
+            <img className='avatar-img' src={AvatarImg} alt='cart-svg' />
           </div>
         </div>
       </div>
@@ -241,7 +241,7 @@ const Navbar = () => {
             isActive ? 'translate-x-0 shadow-md' : '-translate-x-full'
           }`}
         >
-          <div className="inner-absolute-container">
+          <div className='inner-absolute-container'>
             <Link
               to={`/sneaker`}
               onClick={() => setIsActive(false)}
@@ -281,7 +281,7 @@ const Navbar = () => {
         </AbsoluteNav>
       )}
 
-      {isActive && <div className="bg-cover" />}
+      {isActive && <div className='bg-cover' />}
     </NavContainer>
   )
 }
@@ -561,7 +561,7 @@ const NavContainer = styled.div`
         translate-y-[6px]
         md:translate-x-[-0px]
         md:translate-y-[8px]
-      `}//transform: rotate(-45deg) translate(-6px, 6px);;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+      `}//transform: rotate(-45deg) translate(-6px, 6px);;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     }
 
     .line-2 {

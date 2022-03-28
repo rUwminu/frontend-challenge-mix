@@ -25,17 +25,18 @@ const SearchProduct = () => {
   // This api call should be calling route that search for product by name *not get all product
   const getAllProductList = async () => {
     let uri = 'https://staging.flowerchimp.com/asset/json/products.json'
-    axios({
+
+    const res = await axios({
       method: 'GET',
       url: uri,
       responseType: 'stream',
     })
-      .then((res) => {
-        dispatch(getProductList(res.data.products))
-      })
-      .catch((err) => {
-        console.log(err)
-      })
+
+    if (res) dispatch(getProductList(res.data.products))
+
+    console.log(res.data.products)
+
+    return
   }
 
   const deepFilterLowHigh = () => {
@@ -54,8 +55,6 @@ const SearchProduct = () => {
   }
 
   const deepFilterPriceBetween = (items) => {
-    console.log(priceFilter)
-
     const tempArr = items.map((item) => {
       if (priceFilter.min > 0 && priceFilter.max > 0) {
         return (
@@ -75,11 +74,14 @@ const SearchProduct = () => {
     return tempArr.filter((x) => x !== false)
   }
 
-  const handleFilterProductByName = () => {
-    const filterSearchList = allProduct.filter(
+  const handleFilterProductByName = async () => {
+    const filterSearchList = await allProduct.filter(
       (suggestion) =>
-        suggestion.title.toLowerCase().indexOf(type.toLowerCase()) > -1
+        suggestion.title.toLowerCase().indexOf(type.toString().toLowerCase()) >
+        -1
     )
+
+    console.log(filterSearchList)
 
     setOriSuggestions(filterSearchList)
     setFilteredSuggestions(filterSearchList)
@@ -90,7 +92,8 @@ const SearchProduct = () => {
   }
 
   useEffect(() => {
-    if (type && allProduct.length > 0) {
+    if (allProduct.length > 0) {
+      console.log('Trigger Filter?')
       handleFilterProductByName()
     } else {
       getAllProductList()
@@ -100,6 +103,8 @@ const SearchProduct = () => {
   useEffect(() => {
     deepFilterLowHigh()
   }, [isLowHigh])
+
+  console.log(filteredSuggestions)
 
   return (
     <SearchContainer>
@@ -163,7 +168,7 @@ const SearchProduct = () => {
         <ProductContainer>
           <h1>Search By {type}</h1>
           <div className='grid-container'>
-            {filteredSuggestions &&
+            {filteredSuggestions.length > 0 &&
               filteredSuggestions.map((item, index) => {
                 let discount = 20
                 const { id, title, price, image } = item

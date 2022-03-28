@@ -32,31 +32,31 @@ const ProductList = () => {
   return (
     <ProductContainer>
       <h1>Our Products</h1>
-      <div className="product-box">
+      <div className='product-box'>
         {proItemList &&
           proItemList.map((item, index) => {
             let discount = 20
             const { id, title, price, image } = item
             return (
               <ProductCard
-                to={`/sneaker/product/${id}`}
+                to={`/frontend-challenge-mix/product/${id}`}
                 key={id || index}
                 index={index}
               >
-                <div className="product-img-box">
+                <div className='product-img-box'>
                   <img
                     src={image[0]}
                     onError={(e) => (e.target.src = image[1])}
-                    alt="product-img"
+                    alt='product-img'
                   />
-                  {discount > 0 && <div className="tag">{discount}%</div>}
+                  {discount > 0 && <div className='tag'>{discount}%</div>}
                 </div>
-                <div className="product-info">
+                <div className='product-info'>
                   <h2>{title}</h2>
-                  <div className="product-price-box">
+                  <div className='product-price-box'>
                     <p>$ {((price / 100) * (100 - discount)).toFixed(2)}</p>
                     {discount > 0 && (
-                      <small className="price-ori">$ {price}</small>
+                      <small className='price-ori'>$ {price}</small>
                     )}
                   </div>
                 </div>
@@ -64,7 +64,7 @@ const ProductList = () => {
             )
           })}
       </div>
-      <div className="more-btn" onClick={() => handleGetProduct()}>
+      <div className='more-btn' onClick={() => handleGetProduct()}>
         Show more
       </div>
     </ProductContainer>

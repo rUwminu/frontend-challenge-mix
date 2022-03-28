@@ -15,6 +15,7 @@ import {
   MenuSvg,
   CloseSvg,
   DeleteSvg,
+  SearchSvg,
 } from '../../assets/index.js'
 
 const Navbar = () => {
@@ -63,7 +64,7 @@ const Navbar = () => {
 
   const handleKeyDownSearch = (e) => {
     if (e.key === 'Enter') {
-      navigate(`/sneaker/search/type?name=${input}`)
+      navigate(`/frontend-challenge-mix/search/type?name=${input}`)
     }
   }
 
@@ -119,24 +120,39 @@ const Navbar = () => {
           </Burger>
         )}
         <div className='nav-left-container'>
-          <Link to={`/sneaker`}>
+          <Link to={`/frontend-challenge-mix/`}>
             <img className='logo-svg' src={LogoSvg} alt='logo-svg' />
           </Link>
           {!isSearch && (
             <div className='nav-links-box'>
-              <Link to='/sneaker' className='nav-item sm:inline-flex'>
+              <Link
+                to='/frontend-challenge-mix/'
+                className='nav-item sm:inline-flex'
+              >
                 Collections
               </Link>
-              <Link to='/sneaker' className='nav-item md:inline-flex'>
+              <Link
+                to='/frontend-challenge-mix/'
+                className='nav-item md:inline-flex'
+              >
                 Wearable
               </Link>
-              <Link to='/sneaker' className='nav-item md:inline-flex'>
+              <Link
+                to='/frontend-challenge-mix/'
+                className='nav-item md:inline-flex'
+              >
                 Daily Use
               </Link>
-              <Link to='/sneaker' className='nav-item lg:inline-flex'>
+              <Link
+                to='/frontend-challenge-mix/'
+                className='nav-item lg:inline-flex'
+              >
                 About
               </Link>
-              <Link to='/sneaker' className='nav-item lg:inline-flex'>
+              <Link
+                to='/frontend-challenge-mix/'
+                className='nav-item lg:inline-flex'
+              >
                 Contact
               </Link>
             </div>
@@ -147,7 +163,7 @@ const Navbar = () => {
             <img
               onClick={() => setIsSearch(!isSearch)}
               className='search-icon'
-              src={isSearch ? CloseSvg : MenuSvg}
+              src={isSearch ? CloseSvg : SearchSvg}
               alt='cart-svg'
             />
             <input
@@ -167,7 +183,7 @@ const Navbar = () => {
                       const { id, title } = suggestion
                       return (
                         <Link
-                          to={`/sneaker/product/${id}`}
+                          to={`/frontend-challenge-mix/product/${id}`}
                           className={`search-link`}
                           key={index}
                           onClick={() => handleSelectItemFromList(id, title)}
@@ -243,35 +259,35 @@ const Navbar = () => {
         >
           <div className='inner-absolute-container'>
             <Link
-              to={`/sneaker`}
+              to={`/frontend-challenge-mix/`}
               onClick={() => setIsActive(false)}
               className={`nav-item`}
             >
               Collections
             </Link>
             <Link
-              to={`/sneaker`}
+              to={`/frontend-challenge-mix/`}
               onClick={() => setIsActive(false)}
               className={`nav-item`}
             >
               Wearable
             </Link>
             <Link
-              to={`/sneaker`}
+              to={`/frontend-challenge-mix/`}
               onClick={() => setIsActive(false)}
               className={`nav-item`}
             >
               Daily use
             </Link>
             <Link
-              to={`/sneaker`}
+              to={`/frontend-challenge-mix/`}
               onClick={() => setIsActive(false)}
               className={`nav-item`}
             >
               About
             </Link>
             <Link
-              to={`/sneaker`}
+              to={`/frontend-challenge-mix/`}
               onClick={() => setIsActive(false)}
               className={`nav-item`}
             >
@@ -561,7 +577,7 @@ const NavContainer = styled.div`
         translate-y-[6px]
         md:translate-x-[-0px]
         md:translate-y-[8px]
-      `}//transform: rotate(-45deg) translate(-6px, 6px);;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+      `}//transform: rotate(-45deg) translate(-6px, 6px);;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     }
 
     .line-2 {

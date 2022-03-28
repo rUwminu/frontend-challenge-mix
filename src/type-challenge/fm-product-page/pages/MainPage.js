@@ -8,12 +8,12 @@ import SearchProduct from './SearchProduct/SearchProduct'
 import TestPage from './TestPage/TestPage'
 
 const MainPage = () => {
-  const baseUrl = '/sneaker'
+  const baseUrl = '/frontend-challenge-mix'
   return (
     <BrowserRouter>
       <Navbar />
       <Routes>
-        <Route path={`${baseUrl}`} element={<ShopHome />} />
+        <Route path={`${baseUrl}/`} element={<ShopHome />} />
 
         <Route path={`${baseUrl}/product/:id`} element={<SingleProduct />} />
 

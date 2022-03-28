@@ -174,7 +174,7 @@ const SearchProduct = () => {
                 const { id, title, price, image } = item
                 return (
                   <ProductCard
-                    to={`/sneaker/product/${id}`}
+                    to={`/frontend-challenge-mix/product/${id}`}
                     key={index}
                     index={index}
                   >
